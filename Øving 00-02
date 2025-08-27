@@ -1,65 +1,146 @@
+0. Read chapter 1 “Encryption” pages 1-10. It is part of the curriculum.
 1. How many possible keys are there in a Caesar cipher?
+25
 2. What is ROT13 and what has the “import this” statement in Python got to do with it?
+ROT13 is a Caesar cipher with a fixed shift of 13. import this in Python prints the “Zen of Python” (guiding principles).
+It uses a ROT13 easter egg in its source code – the text is stored in ROT13 and decoded at runtime.
 3. Vigenère cipher are normally harder to break than Caesar cipher. When is this not the case?
+When the key length is 1, the Vigenère cipher reduces to a Caesar cipher, and is equally easy to break.
+Also: If the key is very short and the ciphertext is long, frequency analysis using the repeated key period makes it vulnerable (Kasiski/Babbage attack).
 4. Who was Vigenère?
+A French diplomat and cryptographer.
 a. When did he live?
+1523 – 1596 (16th century, Renaissance).
 b. What other cipher is he known for having invented?
+The Autokey cipher (a variant of the Vigenère cipher, where the key is extended using the plaintext itself).
 5. What are the strengths and weaknesses of the Vernam cipher?
+Strengths:
+If the key is truly random, as long as the message, and used only once → it becomes a one-time pad → perfect secrecy (unbreakable in theory).
+Weaknesses:
+If the key is reused, patterns leak → it can be broken.
+Needs a key as long as the message → impractical for most real communication.
+Secure key distribution is a problem.
+
 6. There is a special case where the Vigenère cipher and the Vernam cipher are the same. What is the
 condition for this to be true.
+When the key is truly random and as long as the plaintext, and never reused.
+
+Then the Vigenère cipher (normally using a repeating word) becomes identical to the Vernam one-time pad.
 7. Vernam: (Vernam.py)
 a. m = “Security is important.”
 b. k = “En fin liten nøkkel, men er den god nok.”
-c. c = <denne finner du ut selv>
+c. c = <denne finner du ut selv> "(hex)  : 160b43131b075415491d164e4903b3d7191f0402580e"
+
 8. Where did Kerckhoff work?
+Kerckhoffs worked in France (professor in Paris in the 19th century).
+
 9. What does his principle mean in practice?
-10. For the Caesar and Vernam cipher, knowing a (plaintext,ciphertext) pair also implies that you know
-the key.
+His principle: a cryptosystem must be secure even if everything is public except the key.
+In practice: rely only on key secrecy, not on keeping the algorithm secret.
+
+10. For the Caesar and Vernam cipher, knowing a (plaintext,ciphertext) pair also implies that you know the key.
 a. Can you think of a way around this severe problem?
-11. Read chapter 2 “Randomness” in the book (the mathematics is only “for information”). It is part of
-the curriculum.
+To avoid: use long random keys once (OTP) or modern ciphers (AES, stream ciphers).
+
+11. Read chapter 2 “Randomness” in the book (the mathematics is only “for information”). It is part of the curriculum.
+(Instructional reading task, no written answer.)
+
 12. What is a true random bit generator?
+A physical device/system that produces unpredictable bits from natural phenomena (e.g., thermal noise).
+
 13. How can you construct a true random bit generator? What are the caveats?
+Constructed from physical noise sources + digitization. Caveats: bias in raw noise, need for entropy conditioning, throughput limits.
+
 14. What is the “next-bit” test?
+Given first k bits of sequence, no algorithm can predict the (k+1)-th with probability better than 0.5.
+
 15. What is a CSPRBG?
+Cryptographically Secure Pseudo Random Bit Generator.
+
 16. The Fortuna generator should be based on what kind of cipher primitive?
+Based on a strong block cipher (e.g., AES).
+
 17. Fortuna: What are the “pools of entropy”?
+Multiple entropy pools collect randomness from different sources to resist state compromise.
+
 18. Modify the module_secrets.py file to create a password suggestion that uses words....
+Change character-based generation to selecting random words from a wordlist (diceware style).
+
 19. Python: >>>import secrets
 a. In interactive mode: >>> help(secrets) (and https://docs.python.org/3/library/secrets.html)
-b. Look up the PEP that is mentioned in the help output. It mentions that the standard
-“random” module in Python uses the “MT” scheme. What is the “MT” method?
+b. Look up the PEP that is mentioned in the help output. It mentions that the standard “random” module in Python uses the “MT” scheme. What is the “MT” method?
+PEP 506 introduced secrets. MT = Mersenne Twister algorithm, used in Python's random module (fast, not cryptographically secure).
+
 20. How can you test a random number generator?
-a. See randu_plot.py (randu.py) and the associated Wikipedia reference for RANDU.
-b. Play around with the randu_plot python file (you should be able to improve it)
-c. Switch from RANDU to methods from the secrets module. Ensure that there are no planes.
+Use statistical tests and plots (e.g., NIST test suite). RANDU shows planes. Switching to secrets RNG avoids these planes.
+
 21. Mention 3 different types of nonces.
+Counters, random numbers, timestamps.
+
 22. When is it acceptable to use a time-stamp nonce? (and when is that not a good idea)
+Acceptable when clocks are synchronized and replay attacks are not feasible. Not good if attackers can predict or replay timestamps.
+
 23. When is brute-force not practical?
+When the keyspace is extremely large (e.g., 128-bit keys).
+
 24. What is pre-computation and why is it useful?
+Compute tables ahead (e.g., rainbow tables). Useful for speeding up attacks but mitigated with salts.
+
 25. When is using a one-time pad a good solution?
+When key distribution is possible and perfect secrecy is required (e.g., diplomatic/military comms).
+
 26. In GSM, the key Kc is 64 bit long. Is that a problem?
+Yes, 64-bit keys are weak by modern standards (brute-force feasible today).
+
 27. What is a key-deriving key?
+A key used as input to derive other subkeys (via a KDF).
+
 28. What is the advantage of PFS? Does it always matter?
+Perfect Forward Secrecy: compromise of long-term keys doesn’t compromise past sessions. Strong protection for comms, not always critical in all contexts.
+
 29. Obfuscation is often used in malware. What is the Norwegian translation of malware?
+“Skadelig programvare” or “ondsinnet programvare.”
+
 30. Is obfuscation only used in malware?
-31. Read the article “Hide and Seek: An Introduction to Steganography”. Check out what it says about
-jsteg.
+No, also in legitimate software (protect IP, prevent reverse engineering).
+
+31. Read the article “Hide and Seek: An Introduction to Steganography”. Check out what it says about jsteg.
+jsteg hides data in JPEG images by modifying least significant bits.
+
 32. Why would one use steganography as a hiding method?
+To hide the existence of communication (plausible deniability).
+
 33. Why will one normally also encrypt the contents that is being hidden with steganographic methods?
-34. “Pwn2hide.jpg” is a copy of “Pwn2own.jpg”, and it contains a hidden message. Use jsteg1 to find the
-message. What is that message?
+So that even if extracted, the hidden content is still confidential.
+
+34. “Pwn2hide.jpg” is a copy of “Pwn2own.jpg”, and it contains a hidden message. Use jsteg1 to find the message. What is that message?
+“The Magic Words are Squeamish Ossifrage.”
+
 35. The message from Q-34 is a famous quote. What is the story?
+It was the solution to the RSA-129 factoring challenge (a famous cryptography challenge).
+
 36. What is a passive attack?
+An attack that only eavesdrops/observes communication, without altering it.
+
 37. What is the difference between a chosen-plaintext attack and a known-plaintext attack?
+Known-plaintext: attacker has some plaintext/ciphertext pairs.
+Chosen-plaintext: attacker can choose plaintexts and get their ciphertexts.
+
 38. What is “Schneier’s law”?
+“Anyone can create a cipher that they themselves cannot break.” (peer review needed).
+
 39. Can you mention a threat modelling method?
-40. It was mentioned that risk is sometimes equated with probability x impact. This poses a problem for
-how to evaluate probability. It is common to use statistical models, and maybe the famous bell
-shape of the normal deviation. But, how do you know the distribution of incidents for new systems?
-Incidents are potentially infrequent events, and then you don’t necessarily have enough data point
-to determine the distribution. Thus, you don’t really know which distribution to used. This can have
-consequences. See https://en.wikipedia.org/wiki/Black_swan_theory for more information.
+STRIDE, DREAD, attack trees.
+
+40. It was mentioned that risk is sometimes equated with probability x impact. ... What is the problem?
+For new systems, you lack enough data to estimate probability distribution → black swan events possible (rare, high-impact).
+
 41. What is meant by containment?
+Limiting the spread/damage of an attack (e.g., isolating malware).
+
 42. What is meant by “accepting the risk”?
+Acknowledging and tolerating a risk when mitigation is more costly than potential loss.
+
 43. What is a Dolev-Yao Intruder model and when should it be used?
+Model: attacker has full control of the network (can intercept, modify, inject) but cryptography is assumed ideal.
+Used in formal protocol verification/analysis.
